@@ -15,6 +15,7 @@ const Register = () => {
     formState: { errors },
   } = useForm<inputs>();
 
+  //dataはユーザーが入力したもの
   const onSubmit: SubmitHandler<inputs> = async (data) => {
     console.log(data);
   };
@@ -25,9 +26,14 @@ const Register = () => {
         <h1 className="mb-4 text-2xl text-gray-700 font-medium">新規登録</h1>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-600">Email</label>
+          {/*以下react-hook-formめちゃ便利*/}
           <input
             {...register('email', {
               required: 'メールアドレスを入力してください',
+              pattern: {
+                value: /^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/,
+                message: '正しいメールアドレスを入力してください',
+              },
             })}
             type="text"
             className="mt-1 border-2 rounded-md w-full p-2"
@@ -37,8 +43,20 @@ const Register = () => {
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-600">Password</label>
 
-          <input type="Password" className="mt-1 border-2 rounded-md w-full p-2" />
-          {errors.email && <span className="text-red-600 text-sm">{errors.email.message}</span>}
+          <input
+            {...register('password', {
+              required: 'パスワードを入力してください',
+              minLength: {
+                value: 6,
+                message: '6文字以上入力してください',
+              },
+            })}
+            type="Password"
+            className="mt-1 border-2 rounded-md w-full p-2"
+          />
+          {errors.password && (
+            <span className="text-red-600 text-sm">{errors.password.message}</span>
+          )}
         </div>
 
         <div className="flex justify-end">
