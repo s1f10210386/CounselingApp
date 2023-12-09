@@ -1,6 +1,6 @@
 'use client';
 
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { auth } from '../../../../firebase';
@@ -12,7 +12,7 @@ type inputs = {
   password: string;
 };
 
-const Register = () => {
+const Login = () => {
   const router = useRouter();
 
   const {
@@ -23,18 +23,17 @@ const Register = () => {
 
   //dataはユーザーが入力したもの
   const onSubmit: SubmitHandler<inputs> = async (data) => {
-    await createUserWithEmailAndPassword(auth, data.email, data.password)
+    await signInWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
         // Signed in
-        const user = userCredential.user;
-        router.push('/auth/login');
+        router.push('/');
       })
 
       .catch((error) => {
-        //alert(error);
+        // alert(error);
         //Firebaseライブラリが自動的に既存メアドだったらエラー吐いてくれるけど分かりずらいから自分で作った
-        if (error.code === 'auth/email-already-in-use') {
-          alert('このメールアドレスはすでに使用されています。');
+        if (error.code === 'auth/invalid-credential') {
+          alert('そのようなユーザーは存在しません');
         }
       });
   };
@@ -42,7 +41,7 @@ const Register = () => {
   return (
     <div className="h-screen flex flex-col items-center justify-center">
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h1 className="mb-4 text-2xl text-gray-700 font-medium">新規登録</h1>
+        <h1 className="mb-4 text-2xl text-gray-700 font-medium">ログイン</h1>
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-600">Email</label>
@@ -84,17 +83,16 @@ const Register = () => {
             type="submit"
             className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700"
           >
-            新規登録
+            ログイン
           </button>
         </div>
-
         <div className="mt-4">
-          <span className="text-gray-600 text-sm">既にアカウントをお持ちですか？</span>
+          <span className="text-gray-600 text-sm">新規登録の方はこちらから</span>
           <Link
-            href={'/auth/login'}
+            href={'/auth/register'}
             className="text-blue-500 text-sm font-bold ml-1 hover:text-blue-700"
           >
-            ログインページへ
+            新規登録ページへ
           </Link>
         </div>
       </form>
@@ -102,4 +100,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;
