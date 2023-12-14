@@ -1,7 +1,27 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';
+import { addDoc, collection, doc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../../firebase';
 
 const Chat = () => {
+  const [inputMessage, setInputMessage] = useState<string>('');
+
+  const sendMessage = async () => {
+    if (!inputMessage.trim()) return;
+
+    const messageData = {
+      text: inputMessage,
+      sender: 'user',
+      createdAt: serverTimestamp(),
+    };
+    //メッセージをFirestoreに保存
+    const roomDocRef = doc(db, 'rooms', 'repe6D9ms5J6vWIhJez3');
+    const messageRef = collection(roomDocRef, 'messages');
+    await addDoc(messageRef, messageData);
+  };
+
   return (
     <div className="bg-gray-500 h-full p-4 flex flex-col">
       <h1 className="text-2xl text-white font-semibold mb-4">Room 1</h1>
@@ -24,9 +44,13 @@ const Chat = () => {
           type="text"
           placeholder="メッセージ"
           className="border-2 rounded w-full pr-10 focus:outline-none p-2"
+          onChange={(e) => setInputMessage(e.target.value)}
         />
 
-        <button className="absolute inset-y-0 right-2 flex items-center">
+        <button
+          className="absolute inset-y-0 right-2 flex items-center"
+          onClick={() => sendMessage()}
+        >
           <SendIcon />
         </button>
       </div>

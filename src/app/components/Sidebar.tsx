@@ -5,6 +5,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { db } from '../../../firebase';
 import { Timestamp, collection, doc, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { useAppContext } from '@/context/AppContext';
+import Link from 'next/link';
 
 type Room = {
   id: string;
@@ -77,8 +78,10 @@ const Sidebar = () => {
       </div>
 
       <div className="flex items-center justify-evenly cursor-pointer mb-2 p-4 text-slate-100 text-lg hover:bg-slate-700">
-        <LogoutIcon />
-        <span>ログアウト</span>
+        <Link href={'/auth/login'}>
+          <LogoutIcon />
+          <span>ログアウト</span>
+        </Link>
       </div>
     </div>
   );
