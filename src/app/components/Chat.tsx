@@ -1,12 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';
 import { addDoc, collection, doc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../../firebase';
 
 const Chat = () => {
   const [inputMessage, setInputMessage] = useState<string>('');
+
+  // const messages = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setInputMessage(e.target.value);
+  //   console.log('1', inputMessage);
+  //   console.log('2', e.target.value);
+  // };
 
   const sendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -20,6 +26,8 @@ const Chat = () => {
     const roomDocRef = doc(db, 'rooms', 'repe6D9ms5J6vWIhJez3');
     const messageRef = collection(roomDocRef, 'messages');
     await addDoc(messageRef, messageData);
+
+    setInputMessage('');
   };
 
   return (
@@ -41,6 +49,7 @@ const Chat = () => {
 
       <div className="flex-shrink-0 relative">
         <input
+          value={inputMessage}
           type="text"
           placeholder="メッセージ"
           className="border-2 rounded w-full pr-10 focus:outline-none p-2"
