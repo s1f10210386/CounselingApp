@@ -15,7 +15,6 @@ import {
   where,
 } from 'firebase/firestore';
 import { useAppContext } from '@/context/AppContext';
-import Link from 'next/link';
 
 type Room = {
   id: string;
@@ -109,6 +108,8 @@ const Sidebar = () => {
           </li> */}
         </ul>
       </div>
+
+      {user && <div className="mb-2 text-slate-100 text-lg"> {user.email}</div>}
 
       <div
         onClick={handleLogout}
