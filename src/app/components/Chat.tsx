@@ -30,7 +30,7 @@ const Chat = () => {
     baseURL: 'https://api.openai.iniad.org/api/v1',
     dangerouslyAllowBrowser: true,
   });
-  const { selectedRoom } = useAppContext();
+  const { selectedRoom, selectedRoomName } = useAppContext();
   const [inputMessage, setInputMessage] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isloading, setIsloading] = useState<boolean>(false);
@@ -109,7 +109,7 @@ const Chat = () => {
 
   return (
     <div className="bg-gray-500 h-full p-4 flex flex-col">
-      <h1 className="text-2xl text-white font-semibold mb-4">Room 1</h1>
+      <h1 className="text-2xl text-white font-semibold mb-4">{selectedRoomName}</h1>
       <div className="flex-grow overflow-y-auto mb-4" ref={scrollDiv}>
         {messages.map((message, index) => (
           <div key={index} className={message.sender === 'user' ? 'text-right' : 'text-left'}>

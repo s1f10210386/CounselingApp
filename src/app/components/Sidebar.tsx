@@ -15,6 +15,7 @@ import {
   where,
 } from 'firebase/firestore';
 import { useAppContext } from '@/context/AppContext';
+import { set } from 'firebase/database';
 
 type Room = {
   id: string;
@@ -24,7 +25,7 @@ type Room = {
 
 const Sidebar = () => {
   //これでContextからグローバルにid呼出せる
-  const { user, userId, setSelectedRoom } = useAppContext();
+  const { user, userId, setSelectedRoom, setSelectedRoomName } = useAppContext();
 
   const [rooms, setNewrooms] = useState<Room[]>([]);
 
@@ -55,8 +56,9 @@ const Sidebar = () => {
     fetchRooms();
   }, [userId]);
 
-  const selectRoom = (roomId: string) => {
+  const selectRoom = (roomId: string, roomName: string) => {
     setSelectedRoom(roomId);
+    setSelectedRoomName(roomName);
   };
 
   const addNewRoom = async () => {
@@ -91,7 +93,7 @@ const Sidebar = () => {
             <li
               key={room.id}
               className="cursor-pointer border-b p-4 text-slate-100 hover:bg-slate-700 duration-150"
-              onClick={() => selectRoom(room.id)}
+              onClick={() => selectRoom(room.id, room.name)}
             >
               {room.name}
             </li>
