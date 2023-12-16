@@ -15,8 +15,7 @@ type Room = {
 
 const Sidebar = () => {
   //これでContextからグローバルにid呼出せる
-  const { user, userId } = useAppContext();
-  console.log(userId);
+  const { user, userId, setSelectedRoom } = useAppContext();
 
   const [rooms, setNewrooms] = useState<Room[]>([]);
 
@@ -47,6 +46,10 @@ const Sidebar = () => {
     fetchRooms();
   }, [userId]);
 
+  const selectRoom = (roomId: string) => {
+    setSelectedRoom(roomId);
+  };
+
   return (
     <div className="bg-custom-blue h-full overflow-y-auto px-5 flex flex-col">
       <div className="flex-grow">
@@ -60,6 +63,7 @@ const Sidebar = () => {
             <li
               key={room.id}
               className="cursor-pointer border-b p-4 text-slate-100 hover:bg-slate-700 duration-150"
+              onClick={() => selectRoom(room.id)}
             >
               {room.name}
             </li>
