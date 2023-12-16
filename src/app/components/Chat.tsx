@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';
 import {
   Timestamp,
@@ -35,6 +35,8 @@ const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isloading, setIsloading] = useState<boolean>(false);
 
+  const scrollDiv = useRef<HTMLDivElement>(null);
+
   //各ルームにおけるメッセージを取得
   useEffect(() => {
     if (selectedRoom) {
@@ -60,6 +62,17 @@ const Chat = () => {
       fetchMessages();
     }
   }, [selectedRoom]);
+
+  //メッセージ送信時とかにスクロールする
+  useEffect(() => {
+    if (scrollDiv.current) {
+      const element = scrollDiv.current;
+      element.scrollTo({
+        top: element.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -97,7 +110,7 @@ const Chat = () => {
   return (
     <div className="bg-gray-500 h-full p-4 flex flex-col">
       <h1 className="text-2xl text-white font-semibold mb-4">Room 1</h1>
-      <div className="flex-grow overflow-y-auto mb-4">
+      <div className="flex-grow overflow-y-auto mb-4" ref={scrollDiv}>
         {messages.map((message, index) => (
           <div key={index} className={message.sender === 'user' ? 'text-right' : 'text-left'}>
             <div

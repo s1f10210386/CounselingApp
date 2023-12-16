@@ -112,7 +112,7 @@ const Sidebar = () => {
       {user && <div className="mb-2 text-slate-100 text-lg"> {user.email}</div>}
 
       <div
-        onClick={handleLogout}
+        onClick={() => handleLogout()}
         className="flex items-center justify-evenly cursor-pointer mb-2 p-4 text-slate-100 text-lg hover:bg-slate-700"
       >
         <LogoutIcon />
