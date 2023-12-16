@@ -4,6 +4,7 @@ import { User, onAuthStateChanged } from 'firebase/auth';
 import React, { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../../firebase';
 import { setUserId } from 'firebase/analytics';
+import { useRouter } from 'next/router';
 
 type AppProviderProps = {
   children: ReactNode;
@@ -36,11 +37,17 @@ export function AppProvider({ children }: AppProviderProps) {
   const [userId, setUserId] = useState<string | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [selectedRoomName, setSelectedRoomName] = useState<string | null>(null);
+  const router = useRouter();
   //ログインかログアウトかの状態を監視
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (newUser) => {
       setUser(newUser);
       setUserId(newUser ? newUser.uid : null);
+
+      //useEffectじゃないとrouter.pushが使えない
+      if (!user) {
+        router.push('/auth/login');
+      }
     });
 
     //ページが閉じられたとき(アンバウンドされた時)ストップされるようにする。メモリリークを止まる様に
