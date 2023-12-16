@@ -96,7 +96,6 @@ const Chat = () => {
 
   return (
     <div className="bg-gray-500 h-full p-4 flex flex-col">
-      <LoadingIcons.TailSpin />
       <h1 className="text-2xl text-white font-semibold mb-4">Room 1</h1>
       <div className="flex-grow overflow-y-auto mb-4">
         {messages.map((message, index) => (

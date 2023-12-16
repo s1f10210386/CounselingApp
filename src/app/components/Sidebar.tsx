@@ -2,8 +2,18 @@
 
 import React, { useEffect, useState } from 'react';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { db } from '../../../firebase';
-import { Timestamp, collection, doc, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { auth, db } from '../../../firebase';
+import {
+  Timestamp,
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  where,
+} from 'firebase/firestore';
 import { useAppContext } from '@/context/AppContext';
 import Link from 'next/link';
 
@@ -50,10 +60,29 @@ const Sidebar = () => {
     setSelectedRoom(roomId);
   };
 
+  const addNewRoom = async () => {
+    const roomName = prompt('room名を入力してください。');
+    if (roomName) {
+      const newRoomRef = collection(db, 'rooms');
+      await addDoc(newRoomRef, {
+        name: roomName,
+        userId: userId,
+        createdAt: serverTimestamp(),
+      });
+    }
+  };
+
+  const handleLogout = () => {
+    auth.signOut();
+  };
+
   return (
     <div className="bg-custom-blue h-full overflow-y-auto px-5 flex flex-col">
       <div className="flex-grow">
-        <div className="cursor-pointer flex justify-evenly items-center border mt-2 rounded-md hover:bg-blue-800 duration-150">
+        <div
+          onClick={addNewRoom}
+          className="cursor-pointer flex justify-evenly items-center border mt-2 rounded-md hover:bg-blue-800 duration-150"
+        >
           <span className="text-white p-4 text-2xl">+</span>
           <h1 className="text-white text-xl font-semibold p-4">New Chat</h1>
         </div>
@@ -81,11 +110,12 @@ const Sidebar = () => {
         </ul>
       </div>
 
-      <div className="flex items-center justify-evenly cursor-pointer mb-2 p-4 text-slate-100 text-lg hover:bg-slate-700">
-        <Link href={'/auth/login'}>
-          <LogoutIcon />
-          <span>ログアウト</span>
-        </Link>
+      <div
+        onClick={handleLogout}
+        className="flex items-center justify-evenly cursor-pointer mb-2 p-4 text-slate-100 text-lg hover:bg-slate-700"
+      >
+        <LogoutIcon />
+        <span>ログアウト</span>
       </div>
     </div>
   );
