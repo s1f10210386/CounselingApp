@@ -23,18 +23,21 @@ const Login = () => {
 
   //dataはユーザーが入力したもの
   const onSubmit: SubmitHandler<inputs> = async (data) => {
+    console.log('data', data);
     await signInWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
         // Signed in
+        const user = userCredential.user;
+        console.log('User', user);
         router.push('/');
       })
 
       .catch((error) => {
-        // alert(error);
-        //Firebaseライブラリが自動的に既存メアドだったらエラー吐いてくれるけど分かりずらいから自分で作った
-        if (error.code === 'auth/invalid-credential') {
-          alert('そのようなユーザーは存在しません');
-        }
+        alert(error);
+        // //Firebaseライブラリが自動的に既存メアドだったらエラー吐いてくれるけど分かりずらいから自分で作った
+        // if (error.code === 'auth/invalid-credential') {
+        //   alert('そのようなユーザーは存在しません');
+        // }
       });
   };
 

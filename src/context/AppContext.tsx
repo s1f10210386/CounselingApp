@@ -4,7 +4,7 @@ import { User, onAuthStateChanged } from 'firebase/auth';
 import React, { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../../firebase';
 import { setUserId } from 'firebase/analytics';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 type AppProviderProps = {
   children: ReactNode;
@@ -43,9 +43,10 @@ export function AppProvider({ children }: AppProviderProps) {
     const unsubscribe = onAuthStateChanged(auth, (newUser) => {
       setUser(newUser);
       setUserId(newUser ? newUser.uid : null);
+      console.log('newuser', newUser);
 
-      //useEffectじゃないとrouter.pushが使えない
-      if (!user) {
+      // useEffectじゃないとrouter.pushが使えない
+      if (!newUser) {
         router.push('/auth/login');
       }
     });
@@ -54,7 +55,7 @@ export function AppProvider({ children }: AppProviderProps) {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [user, router]);
 
   return (
     //ラップされてるのはグローバルで使える
